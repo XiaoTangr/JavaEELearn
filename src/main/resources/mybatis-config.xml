@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--configuration核心配置文件-->
+<configuration>
+
+
+
+    <!--    引入外部配置文件-->
+    <properties resource="db.dev.properties"/>
+
+    <typeAliases>
+        <package name="site.icefox.javaeelearn.Entity"/>
+    </typeAliases>
+
+    <!--    默认环境为dev-->
+    <environments default="dev">
+        <environment id="dev">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${mysql.driver}"/>
+                <property name="url" value="${mysql.url}"/>
+                <property name="username" value="${mysql.username}"/>
+                <property name="password" value="${mysql.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <package name="site.icefox.javaeelearn.Mapper"/>
+    </mappers>
+
+</configuration>
