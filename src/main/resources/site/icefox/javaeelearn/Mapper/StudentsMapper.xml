@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="site.icefox.javaeelearn.Mapper.StudentsMapper">
+    <resultMap type="StudentsEntity" id="studentMap">
+        <id property="id" column="sid"/>
+        <result property="name" column="sname"/>
+        <result property="age" column="sage"/>
+    </resultMap>
+    <select id="findAllStudent" resultMap="studentMap">
+        select *
+        from t_students;
+    </select>
+
+</mapper>

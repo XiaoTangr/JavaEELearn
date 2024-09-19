@@ -6,9 +6,33 @@
 <mapper namespace="site.icefox.javaeelearn.Mapper.UsersMapper">
     <!--select查询语句-->
     <select id="getUserByUid" resultType="UsersEntity">
-        select * from d_mybiteslearn.t_users where uid = #{uid}
+        select *
+        from d_mybiteslearn.t_users
+        where uid = #{uid}
     </select>
     <select id="getUsers" resultType="UsersEntity">
-        select * from d_mybiteslearn.t_users;
+        select *
+        from d_mybiteslearn.t_users;
     </select>
+
+    <!-- 插入操作 -->
+    <insert id="addUser" parameterType="UsersEntity">
+        insert into t_users (uid, uname, uage, usex)
+        values (#{uid}, #{uname}, #{uage}, #{usex})
+    </insert>
+
+    <!-- 修改操作 -->
+    <update id="updateUser" parameterType="UsersEntity">
+        update t_users
+        set uname= #{uname},
+            uage = #{uage},
+            usex = #{usex}
+        where uid = #{uid}
+    </update>
+
+    <!-- 删除操作 -->
+    <delete id="deleteUser" parameterType="Integer">
+        delete from t_users where uid=#{uid}
+    </delete>
+
 </mapper>

@@ -9,16 +9,14 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class UsersDao {
-    static Logger logger = Logger.getLogger(UsersDao.class.getName());
 
     public static UsersEntity getUsersByUid(int uid) {
         UsersEntity result = null;
-
         try (SqlSession sqlSession = DBConn.getSqlSession()) {
             UsersMapper usersmapper = sqlSession.getMapper(UsersMapper.class);
             result = usersmapper.getUserByUid(uid);
         } catch (Exception e) {
-            logger.severe(e.getMessage());
+            System.out.println(e.getMessage());
         }
         return result;
     }
@@ -29,7 +27,43 @@ public class UsersDao {
             UsersMapper usersmapper = sqlSession.getMapper(UsersMapper.class);
             result = usersmapper.getUsers();
         } catch (Exception e) {
-            logger.severe(e.getMessage());
+            System.out.println(e.getMessage());
+        }
+        return result;
+    }
+
+    public static int addUser(UsersEntity user) {
+        int result = -1;
+        try (SqlSession sqlSession = DBConn.getSqlSession()) {
+            UsersMapper usersmapper = sqlSession.getMapper(UsersMapper.class);
+            result = usersmapper.addUser(user);  // 获取受影响的行数
+            sqlSession.commit();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return result;
+    }
+
+    public static int updateUser(UsersEntity user) {
+        int result = -1;
+        try (SqlSession sqlSession = DBConn.getSqlSession()) {
+            UsersMapper usersmapper = sqlSession.getMapper(UsersMapper.class);
+            result = usersmapper.updateUser(user);  // 获取受影响的行数
+            sqlSession.commit();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return result;
+    }
+
+    public static int deleteUser(Integer uid) {
+        int result = -1;
+        try (SqlSession sqlSession = DBConn.getSqlSession()) {
+            UsersMapper usersmapper = sqlSession.getMapper(UsersMapper.class);
+            result = usersmapper.deleteUser(uid);  // 获取受影响的行数
+            sqlSession.commit();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
         return result;
     }
