@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="site.icefox.javaeelearn.Mapper.CustomersMapper">
+
+    <!--    条件查询 -->
+    <select id="findCustomerByNameAndJobs" parameterType="CustomersEntity" resultType="CustomersEntity">
+        <!--        使用if的示例-->
+        <!--        select * from t_customers where 1 = 1-->
+        <!--        <if test="username != null and username !=''">-->
+        <!--            and username like concat('%',#{username}, '%')-->
+        <!--        </if>-->
+        <!--        <if test=" jobs != null and jobs != ''">-->
+        <!--            and jobs= #{jobs}-->
+        <!--        </if>-->
+
+
+        <!--        使用<where>规避where 1= 1-->
+        <!--        select * from t_customers-->
+        <!--        <where>-->
+        <!--            <if test="username !=null and username !=''">-->
+        <!--                and username like concat('%',#{username}, '%')-->
+        <!--            </if>-->
+        <!--            <if test="jobs !=null and jobs !=''">-->
+        <!--                and jobs= #{jobs}-->
+        <!--            </if>-->
+        <!--        </where>-->
+
+        <!--        使用 trim 处理 -->
+        select * from t_customers
+        <trim prefix="where" prefixOverrides="and">
+            <if test="username !=null and username !=''">
+                and username like concat('%',#{username}, '%')
+            </if>
+            <if test="jobs !=null and jobs !=''">
+                and jobs= #{jobs}
+            </if>
+        </trim>
+
+    </select>
+    <!--    where元素-->
+    <select id="findCustomerByNameOrJobs" parameterType="CustomersEntity" resultType="CustomersEntity">
+        select * from t_customers where 1 = 1
+        <choose>
+            <when test="username !=null and username !=''">
+                and username like concat('%',#{username}, '%')
+            </when>
+            <when test="jobs !=null and jobs !=''">
+                and jobs= #{jobs}
+            </when>
+            <otherwise>and phone is not null</otherwise>
+        </choose>
+    </select>
+
+    <!--    更新操作 set元素-->
+    <update id="updateCustomerBySet" parameterType="CustomersEntity">
+        update t_customers
+        <set>
+            <if test="username != null and username !=''">
+                username=#{username},
+            </if>
+            <if test="jobs !=null and jobs !=''">jobs=#{jobs},</if>
+            <if test="phone !=null and phone !=''">phone=#{phone},</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!-- 复杂查询 元素迭代数组-->
+    <select id="findByArray" parameterType="java.util.Arrays" resultType="CustomersEntity">
+        select * from t_customers where id in
+        <foreach item="id" index="index" collection="array"
+                 open="(" separator="," close=")">#{id}
+        </foreach>
+    </select>
+
+    <!--  复杂查询 元素迭代List -->
+    <select id="findByList" parameterType="java.util.Arrays"
+            resultType="CustomersEntity">
+        select * from t_customers where id in
+        <foreach item="id" index="index" collection="list"
+                 open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <!-- 复杂查询 元素迭代Map  -->
+    <select id="findByMap" parameterType="java.util.Map" resultType="CustomersEntity">
+        select * from t_customers where jobs=#{jobs} and id in
+        <foreach
+                item="roleMap"
+                index="index"
+                collection="id"
+                open="(" separator="," close=")">
+            #{roleMap}
+        </foreach>
+    </select>
+
+</mapper>

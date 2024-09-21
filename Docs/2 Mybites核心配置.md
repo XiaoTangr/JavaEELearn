@@ -12,12 +12,14 @@ SqlSessionFactoryBuilder包含以上方法，常用的有
 
 这三个 `build` 方法用于构建配置对象，区别在于传入的参数类型不同。`build(InputStream inputStream, String environment, Properties properties)` 通过输入流 `InputStream` 读取配置文件，适合处理二进制或非文本数据；`build(Reader reader, String environment, Properties properties)` 则使用 `Reader` 读取字符流，适合文本配置文件。两者都要求传入 `environment`（环境名称）和 `properties`（额外的配置项）。而 `build(Configuration config)` 直接接收一个 `Configuration` 对象，适用于已经有完整配置实例的情况，无需再提供流、环境或属性，从而简化了配置构建过程。
 
-> 在示例工程中使用的是第一种 (位于`src/main/java/site/icefox/javaeelearn/Util/DBConn.java`中)
+> 在示例工程中使用的是第一种
+>
+> `src/main/java/site/icefox/javaeelearn/Util/DBConn.java`
 >
 > ``` java
->          String resource = "mybatis-config.xml";
->          InputStream inputStream = Resources.getResourceAsStream(resource);
->          sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+>       String resource = "mybatis-config.xml";
+>       InputStream inputStream = Resources.getResourceAsStream(resource);
+>       sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 > ```
 
 SqlSessionFactory对象是线程安全的，它一旦被创建，在整个应用程序执行期间都会存在。如果我们多次创建同一个数据库的SqlSessionFactory对象，那么该数据库的资源将很容易被耗尽。通常每一个数据库都只创建一个SqlSessionFactory对象，所以在构建SqlSessionFactory对象时，建议使用单例模式。
@@ -63,7 +65,7 @@ finally
 }
 ```
 
-> 在示例工程中的例子（位于`src/main/java/site/icefox/javaeelearn/Dao/UsersDao.java`中）
+> `src/main/java/site/icefox/javaeelearn/Dao/UsersDao.java`
 >
 > ``` java
 >     public static UsersEntity getUsersByUid(int uid) {
@@ -141,11 +143,11 @@ finally
 
 ### 2.2 配置节点
 
-#### 2.2.1 properties
+#### 2.2.1 `<properties>`
 
-<properties>是一个配置属性的元素，该元素的作用是读取外部文件的配置信息，在`property`中使用`${}`来引用配置文件中的值
+`<properties>`是一个配置属性的元素，该元素的作用是读取外部文件的配置信息，在`property`中使用`${}`来引用配置文件中的值
 
-> 在示例工程中对应内容（在`src/main/resources/db.dev.properties`中）
+> `src/main/resources/db.dev.properties`
 >
 > ``` xml
 > <!--=src/main/resources/db.dev.properties -->
@@ -159,7 +161,7 @@ finally
 > mysql.password=root
 > ```
 >
-> 在`src/main/resources/mybatis-config.xml`中
+> `src/main/resources/mybatis-config.xml`
 >
 > ``` properties
 >     <!-- 引入外部配置文件 -->
@@ -177,7 +179,7 @@ finally
 >         </environment>
 >     </environments>
 
-#### 2.2.2 settings
+#### 2.2.2 `<settings>`
 
 用于配置一些参数
 
@@ -194,13 +196,13 @@ finally
 </settings>
 ```
 
-#### 2.2.3 typeAliases
+#### 2.2.3 `<typeAliases>`
 
-核心配置文件若要引用一个POJO实体类，需要输入POJO实体类的全限定类名，而全限定类名比较冗长，如果直接输入，很容易拼写错误。这时可以使用<typeAliases>元素为POJO实体类设置一个简短的别名，再通过MyBatis的核心配置文件与映射文件相关联。
+核心配置文件若要引用一个POJO实体类，需要输入POJO实体类的全限定类名，而全限定类名比较冗长，如果直接输入，很容易拼写错误。这时可以使用`<typeAliases>`元素为POJO实体类设置一个简短的别名，再通过MyBatis的核心配置文件与映射文件相关联。
 
 有如下几种方法配置：
 
-方式一：在<typeAliases>元素下，使用多个<typeAlias>元素为每一个全限定类逐个配置别名
+方式一：在`<typeAliases>`元素下，使用多个`<typeAlias>`元素为每一个全限定类逐个配置别名
 
 > ``` xml
 > <typeAliases>
@@ -211,38 +213,39 @@ finally
 
 方式二：通过自动扫描包的形式自定义别名。
 
-> 在示例工程中如下( In `src/main/resources/mybatis-config.xml`)
+> `src/main/resources/mybatis-config.xml`
+>
 > ``` xml
->    <typeAliases>
->   <package name="site.icefox.javaeelearn.Entity"/>
->    </typeAliases>
->    ```
+> <typeAliases>
+> <package name="site.icefox.javaeelearn.Entity"/>
+> </typeAliases>
+> ```
 
-除了可以使用<typeAliases>元素为实体类自定义别名外，MyBatis框架还为许多常见的Java类型（如数值、字符串、日期和集合等）提供了相应的默认别名。例如别名_byte映射类型byte、_long映射类型long等，别名可以在MyBatis中直接使用，但由于别名不区分大小写，所以在使用时要注意重复定义的覆盖问题。
+除了可以使用`<typeAliases>`元素为实体类自定义别名外，MyBatis框架还为许多常见的Java类型（如数值、字符串、日期和集合等）提供了相应的默认别名。例如别名_byte映射类型byte、_long映射类型long等，别名可以在MyBatis中直接使用，但由于别名不区分大小写，所以在使用时要注意重复定义的覆盖问题。
 
-#### 2.2.4 environments
+#### 2.2.4 `<environments>`
 
-MyBatis可以配置多套运行环境，如开发环境、测试环境、生产环境等，我们可以灵活选择不同的配置，从而将SQL映射到不同运行环境的数据库中。不同的运行环境可以通过<environments>元素来配置，但不管增加几套运行环境，都必须要明确选择出当前要用的唯一的一个运行环境。
+MyBatis可以配置多套运行环境，如开发环境、测试环境、生产环境等，我们可以灵活选择不同的配置，从而将SQL映射到不同运行环境的数据库中。不同的运行环境可以通过`<environments>`元素来配置，但不管增加几套运行环境，都必须要明确选择出当前要用的唯一的一个运行环境。
 
 MyBatis的运行环境信息包括事务管理器和数据源。
 
-在MyBatis的核心配置文件中，MyBatis通过<environments>元素定义一个运行环境。<environments>元素有两个子元素。
+在MyBatis的核心配置文件中，MyBatis通过`<environments>`元素定义一个运行环境。`<environments>`元素有两个子元素。
 
-| 元素名称             | 用途                         |
-| -------------------- | ---------------------------- |
-| <transactionManager> | 用于配置运行环境的事务管理器 |
-| <daraSource>         | 用于配置运行环境的数据源信息 |
+| 元素名称               | 用途                         |
+| ---------------------- | ---------------------------- |
+| `<transactionManager>` | 用于配置运行环境的事务管理器 |
+| `<daraSource>`         | 用于配置运行环境的数据源信息 |
 
-##### 2.2.4.1 transcationManager
+##### 2.2.4.1 `<transcationManager>`
 
-<transcationManager>元素可以配置两种类型的事务管理器
+`<transcationManager>`元素可以配置两种类型的事务管理器
 
 | 类型    | 说明                                                         |
 | ------- | ------------------------------------------------------------ |
 | JDBC    | 此配置直接使用JDBC的提交和回滚设置，它依赖于从数据源得到的连接来管理事务的作用域。 |
-| MANAGED | 此配置不提交或回滚一个连接，而是让容器来管理事务的整个生命周期。默认情况下，它会关闭连接，但可以将<transcationManager>元素的closeConnection属性设置为false来阻止它默认的关闭行为 |
+| MANAGED | 此配置不提交或回滚一个连接，而是让容器来管理事务的整个生命周期。默认情况下，它会关闭连接，但可以将`<transcationManager>`元素的closeConnection属性设置为false来阻止它默认的关闭行为 |
 
-##### 2.2.4.2 daraSource
+##### 2.2.4.2 `<daraSource>`
 
 对于数据源的配置，MyBatis提供了UNPOOLED、POOLED和JNDI三种数据源类型。
 
@@ -278,7 +281,7 @@ MyBatis的运行环境信息包括事务管理器和数据源。
 | initial_context | 该属性主要用于在InitialContext中寻找上下文（即initialContext.lookup(initial_context)）。该属性为可选属性，在忽略时，data_source属性会直接从InitialContext中寻找。 |
 | data_source     | 该属性表示引用数据源对象位置的上下文路径。如果提供了initial_context配置，那么程序会在其返回的上下文中进行查找；如果没有提供，则直接在InitialContext中查找。 |
 
-> 在示例工程中(In `src/main/resources/mybatis-config.xml`)
+> `src/main/resources/mybatis-config.xml`
 >
 > ``` xml
 >  <!--    默认环境为dev-->
@@ -298,7 +301,7 @@ MyBatis的运行环境信息包括事务管理器和数据源。
 > ```
 >
 
-#### 2.2.5 mappers
+#### 2.2.5 `<mappers>`
 
 用于引入MyBatis映射文件。映射文件包含了POJO对象和数据表之间的映射信息，MyBatis通过核心配置文件中的<mappers>元素找到映射文件并解析其中的映射信息。
 
@@ -318,7 +321,7 @@ MyBatis的运行环境信息包括事务管理器和数据源。
 </mappers>
 ```
 
-> 在示例工程中（In `src/main/resources/mybatis-config.xml`)
+>  `src/main/resources/mybatis-config.xml`
 >
 > ``` xml
 >     <mappers>
@@ -328,12 +331,12 @@ MyBatis的运行环境信息包括事务管理器和数据源。
 
 ## 三 映射文件
 
-### 3.1 namespace
+### 3.1 `<namespace>`
 
 * 用于区分不同的mapper，全局唯一。
 * 绑定DAO接口，即面向接口编程。当namespace绑定某一接口之后，可以不用写该接口的实现类，MyBatis会通过接口的全限定名查找到对应的mapper配置来执行SQL语句，因此namespace的命名必须跟接口同名。
 
-MyBatis通过<mapper>元素的namespace属性值和子元素的id联合区分不同的Mapper.xml文件。接口中的方法与映射文件中SQL语句id应一一对应。因此：**<mapper>元素的子元素的id可以相同**
+MyBatis通过`<mapper>`元素的namespace属性值和子元素的id联合区分不同的Mapper.xml文件。接口中的方法与映射文件中SQL语句id应一一对应。因此：**`<mapper>`元素的子元素的id可以相同**
 
 ### 3.2 常用节点
 
@@ -349,7 +352,7 @@ MyBatis通过<mapper>元素的namespace属性值和子元素的id联合区分不
 | update    | 用于映射更新语句。                                          |
 | select    | 用于映射查询语句。                                          |
 
-#### 3.2.1 select
+#### 3.2.1 `<select>`
 
 `<select>`元素用来映射查询语句，它可以从数据库中查询数据并返回。
 
@@ -368,7 +371,7 @@ MyBatis通过<mapper>元素的namespace属性值和子元素的id联合区分不
 | statementType | 用于设置MyBatis预处理类。                                    |
 | resultSetType | 表示结果集的类型，它的默认值是unset。                        |
 
-> 在示例工程中 (In `src/main/resources/site/icefox/javaeelearn/Mapper/UsersMapper.xml`)
+>  `src/main/resources/site/icefox/javaeelearn/Mapper/UsersMapper.xml`
 >
 > ``` xml
 >     <!--select查询语句-->
@@ -379,11 +382,11 @@ MyBatis通过<mapper>元素的namespace属性值和子元素的id联合区分不
 >
 > 
 
-#### 3.2.2 insert
+#### 3.2.2 `<insert>`
 
-* <insert>元素用于映射插入语句，在执行完<insert>元素中定义的SQL语句后，会返回插入记录的数量。
+* `<insert>`元素用于映射插入语句，在执行完`<insert>`元素中定义的SQL语句后，会返回插入记录的数量。
 
-> 在示例工程中 (In `src/main/resources/site/icefox/javaeelearn/Mapper/UsersMapper.xml`)
+> `src/main/resources/site/icefox/javaeelearn/Mapper/UsersMapper.xml`
 >
 > ```xml
 >     <!-- 插入操作 -->
@@ -411,11 +414,11 @@ MyBatis通过<mapper>元素的namespace属性值和子元素的id联合区分不
 
     使用MyBatis提供的<selectKey>元素来自定义主键。 在上述<selectKey>元素的属性中，order属性可以被设置为BEFORE或AFTER。如果设置为BEFORE，那么它会首先执行<selectKey>元素中的配置来设置主键，然后执行插入语句；如果设置为AFTER，那么它先执行插入语句，然后执行<selectKey>元素中的配置内容。
 
-#### 3.2.3 update
+#### 3.2.3`< update>`
 
-<update>元素用于映射更新语句，它可以更新数据库中的数据。在执行完元素中定义的SQL语句后，会返回更新的记录数量。
+`<update>`元素用于映射更新语句，它可以更新数据库中的数据。在执行完元素中定义的SQL语句后，会返回更新的记录数量。
 
-> 在示例工程中(In `src/main/resources/site/icefox/javaeelearn/Mapper/UsersMapper.xml`)
+> `src/main/resources/site/icefox/javaeelearn/Mapper/UsersMapper.xml`
 >
 > ``` xml
 >     <!-- 修改操作 -->
@@ -428,11 +431,11 @@ MyBatis通过<mapper>元素的namespace属性值和子元素的id联合区分不
 >     </update>
 > ```
 
-#### 3.2.4 delete
+#### 3.2.4 `<delete>`
 
-<delete>元素用于映射删除语句，在执行完<delete>元素中的SQL语句之后，会返回删除的记录数量。
+`<delete>`元素用于映射删除语句，在执行完`<delete>`元素中的SQL语句之后，会返回删除的记录数量。
 
-> 在示例工程中(In `src/main/resources/site/icefox/javaeelearn/Mapper/UsersMapper.xml`)
+>  `src/main/resources/site/icefox/javaeelearn/Mapper/UsersMapper.xml`
 >
 > ``` xml
 >        <!-- 删除操作 -->
@@ -449,11 +452,11 @@ MyBatis通过<mapper>元素的namespace属性值和子元素的id联合区分不
 | timeout       | 用于设置超时时间，单位为秒。                                 |
 | statementType | 用于设置MyBatis预处理类。                                    |
 
-#### 3.2.5 Sql
+#### 3.2.5 `<Sql>`
 
-在一个映射文件中，通常需要定义多条SQL语句，这些SQL语句的组成可能有一部分是相同的（如多条select语句中都查询相同的id、username字段），如果每一个SQL语句都重写一遍相同的部分，势必会增加代码量。针对此问题，可以在映射文件中使用MyBatis所提供的<sql>元素，将这些SQL语句中相同的组成部分抽取出来，然后在需要的地方引用。
+在一个映射文件中，通常需要定义多条SQL语句，这些SQL语句的组成可能有一部分是相同的（如多条select语句中都查询相同的id、username字段），如果每一个SQL语句都重写一遍相同的部分，势必会增加代码量。针对此问题，可以在映射文件中使用MyBatis所提供的`<sql>`元素，将这些SQL语句中相同的组成部分抽取出来，然后在需要的地方引用。
 
-<sql>元素的作用是定义可重用的SQL代码片段，它可以被包含在其他语句中。<sql>元素可以被静态地（在加载参数时）参数化，<sql>元素不同的属性值通过包含的对象发生变化。 
+`<sql>`元素的作用是定义可重用的SQL代码片段，它可以被包含在其他语句中。`<sql>`元素可以被静态地（在加载参数时）参数化，`<sql>`元素不同的属性值通过包含的对象发生变化。 
 
 ``` xml
 <!--定义要查询的表 -->
@@ -474,17 +477,15 @@ MyBatis通过<mapper>元素的namespace属性值和子元素的id联合区分不
 
 
 
-#### 3.2.6 resultMap
+#### 3.2.6 `<resultMap>`
 
-<resultMap>元素表示结果映射集，是MyBatis中最重要也是功能最强大的元素。<resultMap>元素主要作用是定义映射规则、更新级联以及定义类型转化器等。
+`<resultMap>`元素表示结果映射集，是MyBatis中最重要也是功能最强大的元素。`<resultMap>`元素主要作用是定义映射规则、更新级联以及定义类型转化器等。
 
-默认情况下，MyBatis程序在运行时会自动将查询到的数据与需要返回的对象的属性进行匹配赋值（数据表中的列名与对象的属性名称完全一致才能匹配成功并赋值）。然而实际开发时，数据表中的列和需要返回的对象的属性可能不会完全一致，这种情况下MyBatis不会自动赋值，这时就需要使用<resultMap>元素进行结果集映射。
+默认情况下，MyBatis程序在运行时会自动将查询到的数据与需要返回的对象的属性进行匹配赋值（数据表中的列名与对象的属性名称完全一致才能匹配成功并赋值）。然而实际开发时，数据表中的列和需要返回的对象的属性可能不会完全一致，这种情况下MyBatis不会自动赋值，这时就需要使用`<resultMap>`元素进行结果集映射。
 
 ##### 3.2.6.1 测试代码
 
-书写如下代码用于测试
-
-`src/main/resources/site/icefox/javaeelearn/Mapper/StudentsMapper.xml`
+##### 3.2.6.1.1 `src/main/resources/site/icefox/javaeelearn/Mapper/StudentsMapper.xml`
 
 ``` xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -507,7 +508,7 @@ MyBatis通过<mapper>元素的namespace属性值和子元素的id联合区分不
 
 ```
 
-`src/main/java/site/icefox/javaeelearn/Dao/StudentsDao.java`
+##### 3.2.6.1.2 `src/main/java/site/icefox/javaeelearn/Dao/StudentsDao.java` 
 
 ``` java
 package site.icefox.javaeelearn.Dao;
@@ -527,7 +528,7 @@ public class StudentsDao {
 }
 ```
 
-`src/main/avajjava/site/icefox/javaeelearn/Entity/StudentsEntity.java`
+##### 3.2.6.1.3 `src/main/avajjava/site/icefox/javaeelearn/Entity/StudentsEntity.java`
 
 ``` java
 package site.icefox.javaeelearn.Entity;
@@ -543,7 +544,7 @@ public class StudentsEntity {
 
 ```
 
-`src/main/java/site/icefox/javaeelearn/Mapper/StudentsMapper.java`
+##### 3.2.6.1.4 `src/main/java/site/icefox/javaeelearn/Mapper/StudentsMapper.java`
 
 ``` java
 package site.icefox.javaeelearn.Mapper;
@@ -558,7 +559,7 @@ public interface StudentsMapper {
 
 ```
 
-`src/test/java/ResultMapTest.java`
+##### 3.2.6.1.5 ` src/test/java/ResultMapTest.java`
 
 ``` java
 import org.junit.Test;
