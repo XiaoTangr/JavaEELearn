@@ -10,7 +10,7 @@ import site.icefox.javaeelearn.Util.DBConn;
 import java.util.List;
 
 public class UserDao {
-
+    //    2.2 一对多查询
     public static UserEntity getUsersByUid(int uid) {
         UserEntity result = null;
         try (SqlSession sqlSession = DBConn.getSqlSession()) {
@@ -69,19 +69,18 @@ public class UserDao {
         return result;
     }
 
-    public static UsersEntity findUserWithOrders(Integer id) {
-        UsersEntity result = null;
+//    一对多查询
+    public static UsersEntity selectUserById(int id) {
 
-        try (SqlSession session = DBConn.getSqlSession()) {
-            UsersMapper usersmapper = session.getMapper(UsersMapper.class);
-            // 2.查询id为1的用户信息
-            result = usersmapper.findUserWithOrders(id);
+        UsersEntity result = null;
+        try (SqlSession sqlSession = DBConn.getSqlSession()) {
+            UsersMapper usersmapper = sqlSession.getMapper(UsersMapper.class);
+            result = usersmapper.selectUsersById(id);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        // 3.输出查询结果信息
         return result;
+
+
     }
-
-
 }

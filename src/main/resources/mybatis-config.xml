@@ -12,6 +12,7 @@
 
     <typeAliases>
         <package name="site.icefox.javaeelearn.Entity"/>
+
     </typeAliases>
 
     <!--    默认环境为dev-->
@@ -27,6 +28,7 @@
         </environment>
     </environments>
     <mappers>
+
         <package name="site.icefox.javaeelearn.Mapper"/>
     </mappers>
 

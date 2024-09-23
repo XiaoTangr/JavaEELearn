@@ -1,7 +1,7 @@
 import org.junit.Test;
 import site.icefox.javaeelearn.Dao.OrdersDao;
 import site.icefox.javaeelearn.Dao.PersonDao;
-import site.icefox.javaeelearn.Dao.UserDao;
+import site.icefox.javaeelearn.Dao.UsersDao;
 
 
 public class v4_CodeTest {
@@ -14,7 +14,7 @@ public class v4_CodeTest {
     //   3 一对多
     @Test
     public void findUserWithOrdersTest() {
-        System.out.println(UserDao.findUserWithOrders(1));
+        System.out.println(UsersDao.findUserWithOrders(1));
     }
 
     //    4 多对多

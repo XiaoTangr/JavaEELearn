@@ -16,4 +16,16 @@ public class OrdersDao {
         }
         return result;
     }
+
+//    5.3 多对多查询
+    public static OrdersEntity selectOrdersById(int id) {
+        OrdersEntity result = null;
+        try (SqlSession session = DBConn.getSqlSession()) {
+            OrdersMapper ordersMapper = session.getMapper(OrdersMapper.class);
+            result = ordersMapper.selectOrdersById(id);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return result;
+    }
 }
