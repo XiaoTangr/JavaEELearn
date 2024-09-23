@@ -1,0 +1,18 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="site.icefox.javaeelearn.Mapper.OrdersMapper">
+    <select id="findOrdersWithPorduct" parameterType="Integer"
+            resultMap="OrdersWithProductResult">
+        select *
+        from tb_orders
+        WHERE id = #{id}
+    </select>
+    <resultMap type="OrdersEntity" id="OrdersWithProductResult">
+        <id property="id" column="id"/>
+        <result property="number" column="number"/>
+        <collection property="productList" column="id" ofType="ProductEntity"
+                    select="site.icefox.javaeelearn.Mapper.ProductMapper.findProductById">
+        </collection>
+    </resultMap>
+</mapper>

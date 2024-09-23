@@ -1,47 +1,47 @@
 import org.junit.Test;
-import site.icefox.javaeelearn.Dao.CustomersDao;
-import site.icefox.javaeelearn.Entity.CustomersEntity;
+import site.icefox.javaeelearn.Dao.CustomerDao;
+import site.icefox.javaeelearn.Entity.CustomerEntity;
 
 import java.util.*;
 
-public class SqlPreTest {
+public class v3_SqlPreTest {
     @Test
     public void findCustomerByNameAndJobsTest() {
-        CustomersEntity param = new CustomersEntity();
+        CustomerEntity param = new CustomerEntity();
         param.setUsername("张三");
         param.setJobs("teacher");
-        System.out.println(CustomersDao.findCustomerByNameAndJobs(param));
+        System.out.println(CustomerDao.findCustomerByNameAndJobs(param));
     }
 
     @Test
     public void findCustomerByNameOrJobsTest() {
-        CustomersEntity param = new CustomersEntity();
+        CustomerEntity param = new CustomerEntity();
         param.setUsername("张三");
         param.setJobs("teacher");
-        System.out.println(CustomersDao.findCustomerByNameOrJobs(param));
+        System.out.println(CustomerDao.findCustomerByNameOrJobs(param));
     }
 
     @Test
     public void updateCustomerBySetTest() {
-        CustomersEntity param = new CustomersEntity();
+        CustomerEntity param = new CustomerEntity();
         param.setId(10001); // 假设 uid=1
         param.setUsername("eee");
         param.setJobs("teacher");
         param.setPhone("1008611");
-        System.out.println(CustomersDao.updateCustomerBySet(param));
-        System.out.println(CustomersDao.findCustomerByNameAndJobs(param));
+        System.out.println(CustomerDao.updateCustomerBySet(param));
+        System.out.println(CustomerDao.findCustomerByNameAndJobs(param));
     }
 
     @Test
     public void findByArrayTest() {
         Integer[] roleIds = {10001, 10002};
-        System.out.println(CustomersDao.findByArrayTest(roleIds));
+        System.out.println(CustomerDao.findByArrayTest(roleIds));
     }
 
     @Test
     public void findByListTest() {
         List<Integer> ids = Arrays.asList(10001, 10002);
-        System.out.println(CustomersDao.findByList(ids));
+        System.out.println(CustomerDao.findByList(ids));
     }
 
     @Test
@@ -54,6 +54,6 @@ public class SqlPreTest {
         conditionMap.put("id", ids);
         conditionMap.put("jobs", "teacher");
 
-        System.out.println(CustomersDao.findByMap(conditionMap));
+        System.out.println(CustomerDao.findByMap(conditionMap));
     }
 }

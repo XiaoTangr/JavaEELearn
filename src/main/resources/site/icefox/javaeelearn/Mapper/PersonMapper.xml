@@ -1,0 +1,28 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.icefox.javaeelearn.Mapper.PersonMapper"> <!-- 修正拼写错误 -->
+    <!--   二 一对一查询 -->
+
+    <select id="findPersonById" parameterType="Integer" resultMap="IdCardWithPersonResult">
+        SELECT *
+        FROM tb_person
+        WHERE id = #{id}
+    </select>
+
+    <resultMap type="PersonEntity" id="IdCardWithPersonResult">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="age" column="age"/>
+        <result property="sex" column="sex"/>
+        <!-- 二 一对一查询 嵌套查询方式-->
+        <!--        <association property="card" column="card_id" javaType="IdCardEntity"-->
+        <!--                     select="site.icefox.javaeelearn.Mapper.IdCardMapper.findCodeById"/>-->
+
+        <!--  二 一对一查询 嵌套结果方式-->
+        <association property="card" javaType="IdCardEntity">
+            <id property="id" column="card_id"/>
+            <result property="code" column="code"/>
+        </association>
+
+    </resultMap>
+</mapper>

@@ -3,8 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace=绑定一个对应的Dao/Mapper接口-->
-<mapper namespace="site.icefox.javaeelearn.Mapper.StudentsMapper">
-    <resultMap type="StudentsEntity" id="studentMap">
+<mapper namespace="site.icefox.javaeelearn.Mapper.StudentMapper">
+    <resultMap type="StudentEntity" id="studentMap">
         <id property="id" column="sid"/>
         <result property="name" column="sname"/>
         <result property="age" column="sage"/>

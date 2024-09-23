@@ -4,35 +4,22 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace=绑定一个对应的Dao/Mapper接口-->
 <mapper namespace="site.icefox.javaeelearn.Mapper.UsersMapper">
-    <!--select查询语句-->
-    <select id="getUserByUid" resultType="UsersEntity">
-        select *
-        from d_mybiteslearn.t_users
-        where uid = #{uid}
+    <!--    三 一对多查询-->
+    <resultMap type="UsersEntity" id="UserWithOrdersResult">
+        <id property="id" column="user_id"/>  <!-- 用户ID -->
+        <result property="username" column="username"/>  <!-- 用户名 -->
+        <result property="address" column="address"/>    <!-- 用户地址 -->
+
+        <collection property="ordersList" ofType="OrdersEntity">
+            <id property="id" column="orders_id"/>  <!-- 订单ID -->
+            <result property="number" column="number"/>  <!-- 订单号 -->
+        </collection>
+    </resultMap>
+
+    <select id="findUserWithOrders" resultMap="UserWithOrdersResult">
+        SELECT *
+        FROM tb_user u
+                 LEFT JOIN tb_orders o ON u.id = o.user_id
+        WHERE u.id = #{id}
     </select>
-    <select id="getUsers" resultType="UsersEntity">
-        select *
-        from d_mybiteslearn.t_users;
-    </select>
-
-    <!-- 插入操作 -->
-    <insert id="addUser" parameterType="UsersEntity">
-        insert into t_users (uid, uname, uage, usex)
-        values (#{uid}, #{uname}, #{uage}, #{usex})
-    </insert>
-
-    <!-- 修改操作 -->
-    <update id="updateUser" parameterType="UsersEntity">
-        update t_users
-        set uname= #{uname},
-            uage = #{uage},
-            usex = #{usex}
-        where uid = #{uid}
-    </update>
-
-    <!-- 删除操作 -->
-    <delete id="deleteUser" parameterType="Integer">
-        delete from t_users where uid=#{uid}
-    </delete>
-
 </mapper>

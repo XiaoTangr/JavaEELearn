@@ -1,22 +1,19 @@
 package site.icefox.javaeelearn.Dao;
 
 import org.apache.ibatis.session.SqlSession;
-import site.icefox.javaeelearn.Entity.CustomersEntity;
-//import site.icefox.javaeelearn.Mapper.CustomersMapper;
+import site.icefox.javaeelearn.Entity.CustomerEntity;
 import site.icefox.javaeelearn.Util.DBConn;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomersDao {
-    public static List<CustomersEntity> findCustomerByNameAndJobs(CustomersEntity param) {
-        List<CustomersEntity> result = null;
+public class CustomerDao {
+    public static List<CustomerEntity> findCustomerByNameAndJobs(CustomerEntity param) {
+        List<CustomerEntity> result = null;
         SqlSession session = null;
         try {
             session = DBConn.getSqlSession();
-            result = session.selectList("site.icefox.javaeelearn.Mapper.CustomersMapper.findCustomerByNameAndJobs", param);
+            result = session.selectList("site.icefox.javaeelearn.Mapper.CustomerMapper.findCustomerByNameAndJobs", param);
             session.commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -25,12 +22,12 @@ public class CustomersDao {
         return result;
     }
 
-    public static List<CustomersEntity> findCustomerByNameOrJobs(CustomersEntity param) {
+    public static List<CustomerEntity> findCustomerByNameOrJobs(CustomerEntity param) {
         SqlSession session = null;
-        List<CustomersEntity> result = null;
+        List<CustomerEntity> result = null;
         try {
             session = DBConn.getSqlSession();
-            result = session.selectList("site.icefox.javaeelearn.Mapper.CustomersMapper." + "findCustomerByNameOrJobs", param);
+            result = session.selectList("site.icefox.javaeelearn.Mapper.CustomerMapper." + "findCustomerByNameOrJobs", param);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
@@ -39,11 +36,11 @@ public class CustomersDao {
         return result;
     }
 
-    public static Integer updateCustomerBySet(CustomersEntity param) {
+    public static Integer updateCustomerBySet(CustomerEntity param) {
         int result = 0;
 
         try (SqlSession session = DBConn.getSqlSession()) {
-            result = session.update("site.icefox.javaeelearn.Mapper.CustomersMapper." + "updateCustomerBySet", param);
+            result = session.update("site.icefox.javaeelearn.Mapper.CustomerMapper." + "updateCustomerBySet", param);
             session.commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -52,10 +49,10 @@ public class CustomersDao {
         return result;
     }
 
-    public static List<CustomersEntity> findByArrayTest(Integer[] roleIds) {
-        List<CustomersEntity> customers = null;
+    public static List<CustomerEntity> findByArrayTest(Integer[] roleIds) {
+        List<CustomerEntity> customers = null;
         try (SqlSession session = DBConn.getSqlSession()) {
-            customers = session.selectList("site.icefox.javaeelearn.Mapper.CustomersMapper." +
+            customers = session.selectList("site.icefox.javaeelearn.Mapper.CustomerMapper." +
                     "findByArray", roleIds);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -63,11 +60,11 @@ public class CustomersDao {
         return customers;
     }
 
-    public static List<CustomersEntity> findByList(List<Integer> ids) {
+    public static List<CustomerEntity> findByList(List<Integer> ids) {
 
-        List<CustomersEntity> customers = null;
+        List<CustomerEntity> customers = null;
         try (SqlSession session = DBConn.getSqlSession()) {
-            customers = session.selectList("site.icefox.javaeelearn.Mapper.CustomersMapper." +
+            customers = session.selectList("site.icefox.javaeelearn.Mapper.CustomerMapper." +
                     "findByList", ids);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -75,11 +72,11 @@ public class CustomersDao {
         return customers;
     }
 
-    public static List<CustomersEntity> findByMap(Map<String, Object> conditionMap) {
-        List<CustomersEntity> customers = null;
+    public static List<CustomerEntity> findByMap(Map<String, Object> conditionMap) {
+        List<CustomerEntity> customers = null;
 
         try (SqlSession session = DBConn.getSqlSession()) {
-            customers = session.selectList("site.icefox.javaeelearn.Mapper.CustomersMapper." +
+            customers = session.selectList("site.icefox.javaeelearn.Mapper.CustomerMapper." +
                     "findByMap", conditionMap);
         } catch (Exception e) {
             System.out.println(e.getMessage());
